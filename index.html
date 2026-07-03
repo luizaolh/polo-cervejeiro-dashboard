@@ -167,6 +167,8 @@ tbody td.followers-td { color: var(--amber); font-weight: 700; }
 .city-badge { display: inline-block; padding: 2px 7px; border-radius: 99px; font-size: 0.7rem; background: #2A1A05; color: var(--text-muted); border: 1px solid #4A3010; }
 
 canvas { max-width: 100%; }
+.chart-wrap { position: relative; height: 240px; width: 100%; }
+.chart-wrap.tall { height: 300px; }
 footer { text-align: center; padding: 24px; color: var(--text-muted); font-size: 0.75rem; border-top: 1px solid #3A2510; margin-top: 16px; }
 </style>
 </head>
@@ -259,18 +261,18 @@ footer { text-align: center; padding: 24px; color: var(--text-muted); font-size:
   <div class="grid-3">
     <div class="card">
       <h2><span>📊</span> Distribuição por Tipo</h2>
-      <canvas id="typeChart" height="240"></canvas>
+      <div class="chart-wrap"><canvas id="typeChart"></canvas></div>
     </div>
     <div class="card">
       <h2><span>📍</span> Seguidores por Cidade (Top 8)</h2>
-      <canvas id="cityChart" height="240"></canvas>
+      <div class="chart-wrap"><canvas id="cityChart"></canvas></div>
     </div>
   </div>
 
   <!-- CRESCIMENTO % -->
   <div class="card" style="margin-bottom:24px;">
     <h2><span>📉</span> Crescimento % (Jun 28 → Jun 30) — Top 15</h2>
-    <canvas id="growthChart" height="110"></canvas>
+    <div class="chart-wrap tall"><canvas id="growthChart"></canvas></div>
   </div>
 
   <!-- FULL TABLE -->
