@@ -2,7 +2,7 @@
 {
   "name": "Polo Cervejeiro Instagram",
   "schemaVersion": 1,
-  "description": "Dashboard de seguidores no Instagram das 46 cervejarias filiadas ao Polo Cervejeiro da Grande SP. Ranking por seguidores, distribuição por tipo (Fábrica própria/Cigana/Brewpub) e cidade, tracker de evolução diária. Dados da planilha Filiados_atualizado + coleta ao vivo via Instagram.",
+  "description": "Dashboard de seguidores no Instagram das 46 cervejarias filiadas ao Polo Cervejeiro da Grande SP. Ranking por seguidores, distribuição por tipo (Fábrica própria/Cigana/Brewpub) e cidade, tracker de evolução diária. Dados da planilha Filiados_atualizado + snapshots diários no Drive.",
   "mcpTools": [
     "mcp__f080ab28-3f66-4e2b-968e-4cc1657fa87c__read_file_content",
     "mcp__f080ab28-3f66-4e2b-968e-4cc1657fa87c__search_files"
@@ -177,6 +177,7 @@ tbody td.followers-td { color: var(--amber); font-weight: 700; }
 canvas { max-width: 100%; }
 .chart-wrap { position: relative; height: 240px; width: 100%; }
 .chart-wrap.tall { height: 300px; }
+.note { font-size: 0.72rem; color: var(--text-muted); margin-top: 10px; line-height: 1.5; }
 footer { text-align: center; padding: 24px; color: var(--text-muted); font-size: 0.75rem; border-top: 1px solid #3A2510; margin-top: 16px; }
 </style>
 </head>
@@ -193,7 +194,7 @@ footer { text-align: center; padding: 24px; color: var(--text-muted); font-size:
   </div>
   <div class="header-stats">
     <div class="hstat">
-      <div class="hstat-val">685.517</div>
+      <div class="hstat-val" id="hTotal">—</div>
       <div class="hstat-label">Seguidores Totais</div>
     </div>
     <div class="hstat">
@@ -201,7 +202,7 @@ footer { text-align: center; padding: 24px; color: var(--text-muted); font-size:
       <div class="hstat-label">Cervejarias Filiadas</div>
     </div>
     <div class="hstat">
-      <div class="hstat-val" style="color:#10B981">+3.213</div>
+      <div class="hstat-val" id="hGrowth" style="color:#10B981">—</div>
       <div class="hstat-label">Crescimento (vs última captura)</div>
     </div>
   </div>
@@ -209,7 +210,7 @@ footer { text-align: center; padding: 24px; color: var(--text-muted); font-size:
     <div class="polo-icon">📷</div>
     <div>
       <div class="polo-handle">@polocervejeirosp</div>
-      <div class="polo-count">1.368 seguidores</div>
+      <div class="polo-count">1.566 seguidores</div>
     </div>
   </div>
 </div>
@@ -218,8 +219,8 @@ footer { text-align: center; padding: 24px; color: var(--text-muted); font-size:
 <div class="subheader">
   <div class="subheader-left">Dashboard de Seguidores no Instagram</div>
   <div class="subheader-right">
-    <div class="subheader-date">Dados coletados: 27/07/2026 21:46 · Captura anterior: 15/07/2026 11:00</div>
-    <div class="subheader-growth">▲ +3.213 seguidores em relação à última captura</div>
+    <div class="subheader-date">Dados coletados: 03/08/2026 · Captura anterior: 01/08/2026</div>
+    <div class="subheader-growth" id="subGrowth">—</div>
   </div>
 </div>
 
@@ -231,19 +232,19 @@ footer { text-align: center; padding: 24px; color: var(--text-muted); font-size:
       <div class="kpi-icon">🏆</div>
       <div class="kpi-val">Dogma</div>
       <div class="kpi-label">Mais seguida do polo</div>
-      <div class="kpi-sub">111.026 seguidores</div>
+      <div class="kpi-sub">111.000 seguidores</div>
     </div>
     <div class="kpi">
       <div class="kpi-icon">📈</div>
-      <div class="kpi-val" style="color:#10B981">+3.213</div>
+      <div class="kpi-val" id="kpiGrowth" style="color:#10B981">—</div>
       <div class="kpi-label">Crescimento desde última captura</div>
-      <div class="kpi-sub" style="color:#A08040">15/07 11:00 → 27/07 21:46</div>
+      <div class="kpi-sub" style="color:#A08040">01/08 → 03/08</div>
     </div>
     <div class="kpi">
       <div class="kpi-icon">🚀</div>
       <div class="kpi-val">Drøm</div>
       <div class="kpi-label">Maior crescimento %</div>
-      <div class="kpi-sub">+4,78% desde última captura</div>
+      <div class="kpi-sub">+0,93% desde última captura</div>
     </div>
     <div class="kpi">
       <div class="kpi-icon">🏭</div>
@@ -281,6 +282,7 @@ footer { text-align: center; padding: 24px; color: var(--text-muted); font-size:
   <div class="card" style="margin-bottom:24px;">
     <h2><span>📉</span> Crescimento % (desde última captura) — Top 15</h2>
     <div class="chart-wrap tall"><canvas id="growthChart"></canvas></div>
+    <div class="note">⚠️ Para contas acima de 10 mil seguidores, o Instagram exibe a contagem arredondada (ex: "93,4 mil"). Isso pode gerar pequenas variações artificiais (positivas ou negativas) nas contas maiores do ranking — os números abaixo de 10 mil seguidores são exatos.</div>
   </div>
 
   <!-- FULL TABLE -->
@@ -309,57 +311,57 @@ footer { text-align: center; padding: 24px; color: var(--text-muted); font-size:
 </div>
 
 <footer>
-  Polo Cervejeiro da Grande São Paulo &nbsp;·&nbsp; Dados coletados em 27/07/2026 21:46 via Instagram &nbsp;·&nbsp; Captura anterior: 15/07/2026 11:00
+  Polo Cervejeiro da Grande São Paulo &nbsp;·&nbsp; Dados coletados em 03/08/2026 via Instagram &nbsp;·&nbsp; Captura anterior: 01/08/2026
 </footer>
 
 <script>
 const data = [
-  {name:"Dogma",ig:"@cervejariadogma",f:111026,prev:110951,city:"São Paulo",type:"N/I"},
-  {name:"Brass Brew",ig:"@brassbrew",f:93147,prev:92736,city:"São Paulo",type:"Cigana"},
-  {name:"Tarantino",ig:"@tarantinocervejaria",f:66950,prev:66808,city:"São Paulo",type:"Fábrica própria"},
-  {name:"Trilha",ig:"@trilhacervejaria",f:58145,prev:57746,city:"São Paulo",type:"Fábrica própria"},
-  {name:"Croma",ig:"@cromabeer",f:38056,prev:37828,city:"São Paulo",type:"Fábrica própria"},
-  {name:"Nacional",ig:"@cervejarianacional",f:29600,prev:29573,city:"São Paulo",type:"Fábrica própria"},
-  {name:"Holy Water",ig:"@cervejariaholywater",f:25545,prev:25492,city:"São Caetano do Sul",type:"N/I"},
-  {name:"La Caminera",ig:"@lacamineracervejaria",f:19390,prev:19375,city:"São Paulo",type:"Cigana"},
-  {name:"Los Forajidos",ig:"@losforajidosbrewing",f:19193,prev:18792,city:"São Paulo",type:"Fábrica própria"},
-  {name:"Central",ig:"@cervejariacentralsp",f:19130,prev:19068,city:"São Paulo",type:"N/I"},
-  {name:"Juan Caloto",ig:"@esconderijo.juancaloto",f:19126,prev:19055,city:"São Paulo",type:"N/I"},
-  {name:"ZEV",ig:"@cervejariazev",f:17244,prev:17242,city:"Suzano",type:"Fábrica própria"},
-  {name:"Menze Brew",ig:"@menzebrew",f:14881,prev:14772,city:"São Caetano do Sul",type:"N/I"},
-  {name:"Cervejaria 77",ig:"@armazem.77",f:14819,prev:14755,city:"São Paulo",type:"Fábrica própria"},
-  {name:"Cybeer",ig:"@cybeer_cervejaria",f:12274,prev:12233,city:"São Paulo",type:"Fábrica própria"},
-  {name:"Maralto",ig:"@cervejariamaralto",f:11710,prev:11710,city:"São Paulo",type:"N/I"},
-  {name:"X Craft Beer",ig:"@xcraftbeer",f:11164,prev:11140,city:"São Paulo",type:"Fábrica própria"},
-  {name:"EWAM",ig:"@cervejaria_ewam",f:9069,prev:9049,city:"São Paulo",type:"Fábrica própria"},
-  {name:"BREWTO'S",ig:"@cervejariabrewtos",f:6995,prev:6912,city:"Vargem Grande Paulista",type:"Fábrica própria"},
-  {name:"Sumeria",ig:"@cervejariasumeria",f:6420,prev:6418,city:"Santo André",type:"N/I"},
-  {name:"MAD LIZARD",ig:"@madlizardbrew",f:5610,prev:5606,city:"São Paulo",type:"N/I"},
-  {name:"Dinastia",ig:"@cervejariadinastia",f:5061,prev:5060,city:"São Paulo",type:"Cigana"},
-  {name:"Langerwisch Bier",ig:"@langerwischbier",f:4679,prev:4672,city:"Mairiporã",type:"N/I"},
-  {name:"Minnesota",ig:"@cervejaria_minnesota",f:4552,prev:4555,city:"Santo André",type:"Cigana"},
-  {name:"Cia de Brassagem",ig:"@ciadebrassagembrasilcervejaria",f:4446,prev:4445,city:"São Paulo",type:"Cigana"},
-  {name:"Tria",ig:"@cervejariatria",f:4339,prev:4323,city:"São Paulo",type:"Cigana"},
-  {name:"Guaru",ig:"@cervejariaguaru",f:4102,prev:4085,city:"Guarulhos",type:"N/I"},
-  {name:"GUTEMBEER",ig:"@cervejariagutembeer",f:4005,prev:3992,city:"São Paulo",type:"Fábrica própria"},
-  {name:"Cervejaria Palácio",ig:"@cervejariapalacio",f:3842,prev:3832,city:"Mauá",type:"Fábrica própria"},
-  {name:"Arkangel",ig:"@arkangelbeer",f:3617,prev:3546,city:"Arujá",type:"Cigana"},
-  {name:"East Zone",ig:"@eastzonebeer",f:3592,prev:3586,city:"São Paulo",type:"Cigana"},
-  {name:"Alvorada Cervejaria",ig:"@alvoradacervejaria_oficial",f:3009,prev:3001,city:"São Paulo",type:"Brewpub"},
-  {name:"DosMoret",ig:"@cervejariadosmoret",f:2990,prev:2975,city:"São Bernardo do Campo",type:"Fábrica própria"},
-  {name:"Smokedbrew",ig:"@smokedbrew",f:2886,prev:2879,city:"São Paulo",type:"Fábrica própria"},
-  {name:"LAB.",ig:"@lab.cervejaria",f:2857,prev:2846,city:"Guarulhos",type:"Cigana"},
-  {name:"Incomum",ig:"@incomumcervejaria",f:2728,prev:2727,city:"São Paulo",type:"N/I"},
-  {name:"Triângulo Bermudas",ig:"@trimudas",f:2626,prev:2610,city:"Santo André",type:"Fábrica própria"},
-  {name:"Camilos",ig:"@cervejariacamilos",f:2453,prev:2446,city:"São Paulo",type:"N/I"},
-  {name:"Brework",ig:"@breworksp",f:2236,prev:2223,city:"São Paulo",type:"Fábrica própria"},
-  {name:"Sóbrejja!",ig:"@cervejariasobrejja",f:2228,prev:2223,city:"São Paulo",type:"Fábrica própria"},
-  {name:"Peregrinos",ig:"@cervejariaperegrinos",f:2146,prev:2129,city:"São Paulo",type:"Cigana"},
-  {name:"Drøm",ig:"@dromcerveja",f:1996,prev:1905,city:"São Paulo",type:"Brewpub"},
-  {name:"Costa Leste",ig:"@costalestecervejaria",f:1645,prev:1647,city:"São Paulo",type:"Fábrica própria"},
-  {name:"Destiny",ig:"@destinybrewingco",f:1639,prev:1622,city:"São Paulo",type:"Fábrica própria"},
-  {name:"Polo SP",ig:"@polocervejeirosp",f:1368,prev:750,city:"São Paulo",type:"Organização"},
-  {name:"Filosofia",ig:"@cervejariafilosofia",f:981,prev:964,city:"Santo André",type:"N/I"}
+  {name:"Dogma",ig:"@cervejariadogma",f:111000,prev:111000,city:"São Paulo",type:"N/I"},
+  {name:"Brass Brew",ig:"@brassbrew",f:93400,prev:93300,city:"São Paulo",type:"Cigana"},
+  {name:"Tarantino",ig:"@tarantinocervejaria",f:66900,prev:66900,city:"São Paulo",type:"Fábrica própria"},
+  {name:"Trilha",ig:"@trilhacervejaria",f:58100,prev:58100,city:"São Paulo",type:"Fábrica própria"},
+  {name:"Croma",ig:"@cromabeer",f:38100,prev:38100,city:"São Paulo",type:"Fábrica própria"},
+  {name:"Nacional",ig:"@cervejarianacional",f:29600,prev:29600,city:"São Paulo",type:"Fábrica própria"},
+  {name:"Holy Water",ig:"@cervejariaholywater",f:25600,prev:25600,city:"São Caetano do Sul",type:"N/I"},
+  {name:"Los Forajidos",ig:"@losforajidosbrewing",f:19400,prev:19300,city:"São Paulo",type:"Fábrica própria"},
+  {name:"La Caminera",ig:"@lacamineracervejaria",f:19300,prev:19300,city:"São Paulo",type:"Cigana"},
+  {name:"Central",ig:"@cervejariacentralsp",f:19100,prev:19100,city:"São Paulo",type:"N/I"},
+  {name:"Juan Caloto",ig:"@esconderijo.juancaloto",f:19100,prev:19100,city:"São Paulo",type:"N/I"},
+  {name:"ZEV",ig:"@cervejariazev",f:17200,prev:17200,city:"Suzano",type:"Fábrica própria"},
+  {name:"Menze Brew",ig:"@menzebrew",f:14900,prev:14800,city:"São Caetano do Sul",type:"N/I"},
+  {name:"Cervejaria 77",ig:"@armazem.77",f:14800,prev:14800,city:"São Paulo",type:"Fábrica própria"},
+  {name:"Cybeer",ig:"@cybeer_cervejaria",f:12200,prev:12200,city:"São Paulo",type:"Fábrica própria"},
+  {name:"Maralto",ig:"@cervejariamaralto",f:11700,prev:11600,city:"São Paulo",type:"N/I"},
+  {name:"X Craft Beer",ig:"@xcraftbeer",f:11100,prev:11100,city:"São Paulo",type:"Fábrica própria"},
+  {name:"EWAM",ig:"@cervejaria_ewam",f:9082,prev:9077,city:"São Paulo",type:"Fábrica própria"},
+  {name:"BREWTO'S",ig:"@cervejariabrewtos",f:7033,prev:7030,city:"Vargem Grande Paulista",type:"Fábrica própria"},
+  {name:"Sumeria",ig:"@cervejariasumeria",f:6420,prev:6420,city:"Santo André",type:"N/I"},
+  {name:"MAD LIZARD",ig:"@madlizardbrew",f:5611,prev:5613,city:"São Paulo",type:"N/I"},
+  {name:"Dinastia",ig:"@cervejariadinastia",f:5055,prev:5062,city:"São Paulo",type:"Cigana"},
+  {name:"Langerwisch Bier",ig:"@langerwischbier",f:4745,prev:4727,city:"Mairiporã",type:"N/I"},
+  {name:"Minnesota",ig:"@cervejaria_minnesota",f:4555,prev:4553,city:"Santo André",type:"Cigana"},
+  {name:"Cia de Brassagem",ig:"@ciadebrassagembrasilcervejaria",f:4444,prev:4444,city:"São Paulo",type:"Cigana"},
+  {name:"Tria",ig:"@cervejariatria",f:4337,prev:4339,city:"São Paulo",type:"Cigana"},
+  {name:"Guaru",ig:"@cervejariaguaru",f:4109,prev:4108,city:"Guarulhos",type:"N/I"},
+  {name:"GUTEMBEER",ig:"@cervejariagutembeer",f:4013,prev:4006,city:"São Paulo",type:"Fábrica própria"},
+  {name:"Cervejaria Palácio",ig:"@cervejariapalacio",f:3837,prev:3838,city:"Mauá",type:"Fábrica própria"},
+  {name:"Arkangel",ig:"@arkangelbeer",f:3646,prev:3632,city:"Arujá",type:"Cigana"},
+  {name:"East Zone",ig:"@eastzonebeer",f:3594,prev:3593,city:"São Paulo",type:"Cigana"},
+  {name:"Alvorada Cervejaria",ig:"@alvoradacervejaria_oficial",f:3009,prev:3010,city:"São Paulo",type:"Brewpub"},
+  {name:"DosMoret",ig:"@cervejariadosmoret",f:2992,prev:2994,city:"São Bernardo do Campo",type:"Fábrica própria"},
+  {name:"Smokedbrew",ig:"@smokedbrew",f:2896,prev:2890,city:"São Paulo",type:"Fábrica própria"},
+  {name:"LAB.",ig:"@lab.cervejaria",f:2860,prev:2861,city:"Guarulhos",type:"Cigana"},
+  {name:"Incomum",ig:"@incomumcervejaria",f:2728,prev:2729,city:"São Paulo",type:"N/I"},
+  {name:"Triângulo Bermudas",ig:"@trimudas",f:2642,prev:2635,city:"Santo André",type:"Fábrica própria"},
+  {name:"Camilos",ig:"@cervejariacamilos",f:2455,prev:2455,city:"São Paulo",type:"N/I"},
+  {name:"Brework",ig:"@breworksp",f:2247,prev:2241,city:"São Paulo",type:"Fábrica própria"},
+  {name:"Sóbrejja!",ig:"@cervejariasobrejja",f:2226,prev:2226,city:"São Paulo",type:"Fábrica própria"},
+  {name:"Peregrinos",ig:"@cervejariaperegrinos",f:2158,prev:2154,city:"São Paulo",type:"Cigana"},
+  {name:"Drøm",ig:"@dromcerveja",f:2057,prev:2038,city:"São Paulo",type:"Brewpub"},
+  {name:"Costa Leste",ig:"@costalestecervejaria",f:1643,prev:1643,city:"São Paulo",type:"Fábrica própria"},
+  {name:"Destiny",ig:"@destinybrewingco",f:1638,prev:1638,city:"São Paulo",type:"Fábrica própria"},
+  {name:"Polo SP",ig:"@polocervejeirosp",f:1566,prev:1555,city:"São Paulo",type:"Organização"},
+  {name:"Filosofia",ig:"@cervejariafilosofia",f:993,prev:990,city:"Santo André",type:"N/I"}
 ];
 
 const fmt = n => n >= 1000 ? (n/1000).toFixed(1).replace('.0','') + 'k' : n.toLocaleString('pt-BR');
@@ -372,6 +374,15 @@ function dStr(delta) {
   if(delta < 0) return `<span class="neg">${delta}</span>`;
   return `<span class="zero">—</span>`;
 }
+
+// HEADER TOTALS
+const totalF = data.reduce((s,d)=>s+d.f,0);
+const totalPrev = data.reduce((s,d)=>s+d.prev,0);
+const totalGrowth = totalF - totalPrev;
+document.getElementById('hTotal').textContent = fmtFull(totalF);
+document.getElementById('hGrowth').textContent = (totalGrowth>=0?'+':'') + fmtFull(totalGrowth);
+document.getElementById('subGrowth').innerHTML = `▲ ${(totalGrowth>=0?'+':'')}${fmtFull(totalGrowth)} seguidores em relação à última captura`;
+document.getElementById('kpiGrowth').textContent = (totalGrowth>=0?'+':'') + fmtFull(totalGrowth);
 
 // TOP 10
 const top10El = document.getElementById('top10');
